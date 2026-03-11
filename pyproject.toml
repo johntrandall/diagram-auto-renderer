@@ -15,5 +15,8 @@ dependencies = [
 [tool.hatch.build.targets.wheel]
 packages = ["src/diagram_render"]
 
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
 [project.scripts]
 diagram-render = "diagram_render.cli:main"
