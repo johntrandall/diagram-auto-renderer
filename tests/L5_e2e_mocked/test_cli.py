@@ -152,6 +152,23 @@ class TestCliRenderMocked:
         assert result.exit_code == 1
 
 
+class TestCliGitAddFailure:
+    @patch("diagram_render.cli._git_add", return_value=False)
+    @patch("diagram_render.renderer.subprocess.run")
+    @patch("diagram_render.renderer.shutil.which", return_value="/usr/bin/plantuml")
+    def test_git_add_failure_shows_error(self, mock_which, mock_run, mock_git_add, mock_git_repo):
+        """Failed git add should show error message in output."""
+        mock_proc = MagicMock()
+        mock_proc.returncode = 0
+        mock_proc.stdout = b"<svg>mocked</svg>"
+        mock_proc.stderr = b""
+        mock_run.return_value = mock_proc
+
+        puml = mock_git_repo / "seq.puml"
+        result = runner.invoke(app, [str(puml), "--stage"])
+        assert "Failed to git add" in result.output
+
+
 class TestCliNoFiles:
     def test_no_args(self):
         result = runner.invoke(app, [])

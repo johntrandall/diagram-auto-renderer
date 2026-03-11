@@ -1,8 +1,16 @@
-"""L1 unit tests for diagram_render.renderer — strip_frontmatter and tool checks."""
+"""L1 unit tests for diagram_render.renderer — strip_frontmatter, tool checks, render paths."""
 
-from unittest.mock import patch
+import subprocess
+from pathlib import Path
+from unittest.mock import patch, MagicMock
 
-from diagram_render.renderer import _strip_frontmatter, _tool_available
+from diagram_render.models import DiagramFile, DiagramFormat, RenderStatus
+from diagram_render.renderer import (
+    _strip_frontmatter,
+    _tool_available,
+    render_plantuml,
+    render_mermaid,
+)
 
 
 class TestStripFrontmatter:
@@ -41,3 +49,49 @@ class TestToolAvailable:
     @patch("diagram_render.renderer.shutil.which", return_value=None)
     def test_not_available(self, mock_which):
         assert _tool_available("plantuml") is False
+
+
+class TestRenderPlantumlToolMissing:
+    @patch("diagram_render.renderer.shutil.which", return_value=None)
+    def test_tool_missing(self, mock_which, tmp_path):
+        source = tmp_path / "test.puml"
+        source.write_text("@startuml\n@enduml")
+        diagram = DiagramFile(
+            source=source,
+            format=DiagramFormat.PLANTUML,
+            output=tmp_path / "test.svg",
+        )
+        result = render_plantuml(diagram)
+        assert result.status == RenderStatus.TOOL_MISSING
+        assert "plantuml" in result.message.lower()
+
+
+class TestRenderMermaidToolMissing:
+    @patch("diagram_render.renderer.shutil.which", return_value=None)
+    def test_tool_missing(self, mock_which, tmp_path):
+        source = tmp_path / "test.mmd"
+        source.write_text("graph TD\n  A-->B")
+        diagram = DiagramFile(
+            source=source,
+            format=DiagramFormat.MERMAID,
+            output=tmp_path / "test.svg",
+        )
+        result = render_mermaid(diagram)
+        assert result.status == RenderStatus.TOOL_MISSING
+        assert "mmdc" in result.message.lower()
+
+
+class TestRenderPlantumlTimeout:
+    @patch("diagram_render.renderer.subprocess.run", side_effect=subprocess.TimeoutExpired(cmd="plantuml", timeout=30))
+    @patch("diagram_render.renderer.shutil.which", return_value="/usr/bin/plantuml")
+    def test_timeout_returns_failed(self, mock_which, mock_run, tmp_path):
+        source = tmp_path / "test.puml"
+        source.write_text("@startuml\n@enduml")
+        diagram = DiagramFile(
+            source=source,
+            format=DiagramFormat.PLANTUML,
+            output=tmp_path / "test.svg",
+        )
+        result = render_plantuml(diagram)
+        assert result.status == RenderStatus.FAILED
+        assert "timed out" in result.message.lower()
