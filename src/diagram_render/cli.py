@@ -41,6 +41,7 @@ def _get_staged_diagram_files() -> list[Path]:
                 "*.puml",
                 "*.mmd",
                 "*.mermaid",
+                "*.d2",
             ],
             capture_output=True,
             text=True,

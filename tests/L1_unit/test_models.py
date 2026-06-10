@@ -16,6 +16,7 @@ class TestEnumValues:
     def test_diagram_format_values(self):
         assert DiagramFormat.PLANTUML.value == "plantuml"
         assert DiagramFormat.MERMAID.value == "mermaid"
+        assert DiagramFormat.D2.value == "d2"
 
     def test_render_status_values(self):
         assert RenderStatus.RENDERED.value == "rendered"
@@ -39,6 +40,9 @@ class TestExtensionMap:
 
     def test_mermaid_maps_to_mermaid(self):
         assert EXTENSION_FORMAT_MAP[".mermaid"] == DiagramFormat.MERMAID
+
+    def test_d2_maps_to_d2(self):
+        assert EXTENSION_FORMAT_MAP[".d2"] == DiagramFormat.D2
 
 
 class TestDiagramFile:

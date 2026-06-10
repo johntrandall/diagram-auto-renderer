@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "diagram-auto-renderer"
-version = "0.1.0"
+version = "0.3.0"
 description = "Detect stale diagram sources and render fresh SVGs"
 requires-python = ">=3.10"
 dependencies = [

@@ -12,6 +12,7 @@ class DiagramFormat(Enum):
 
     PLANTUML = "plantuml"  # .puml
     MERMAID = "mermaid"  # .mmd, .mermaid
+    D2 = "d2"  # .d2
 
 
 class Severity(Enum):
@@ -59,4 +60,5 @@ EXTENSION_FORMAT_MAP: dict[str, DiagramFormat] = {
     ".puml": DiagramFormat.PLANTUML,
     ".mmd": DiagramFormat.MERMAID,
     ".mermaid": DiagramFormat.MERMAID,
+    ".d2": DiagramFormat.D2,
 }
