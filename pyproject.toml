@@ -6,6 +6,10 @@ build-backend = "hatchling.build"
 name = "diagram-auto-renderer"
 version = "0.3.0"
 description = "Detect stale diagram sources and render fresh SVGs"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "John Randall" }]
 requires-python = ">=3.10"
 dependencies = [
     "typer>=0.9",
@@ -17,6 +21,9 @@ packages = ["src/diagram_render"]
 
 [dependency-groups]
 dev = ["pytest>=8.0"]
+
+[project.urls]
+Repository = "https://github.com/johntrandall/diagram-auto-renderer"
 
 [project.scripts]
 diagram-render = "diagram_render.cli:main"
