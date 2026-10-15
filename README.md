@@ -14,11 +14,13 @@ Install only the renderers for the formats you use. A missing renderer is report
 
 ## Install
 
-```
-uv tool install git+https://github.com/johntrandall/diagram-auto-renderer
+```bash
+brew tap johntrandall/tap
+brew install diagram-render
 ```
 
-or `pipx install git+https://github.com/johntrandall/diagram-auto-renderer`. Python 3.10 or later.
+Without Homebrew: `uv tool install git+https://github.com/johntrandall/diagram-auto-renderer`
+(or the same with `pipx install`). Python 3.10 or later.
 
 ## Use
 
